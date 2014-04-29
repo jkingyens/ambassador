@@ -5,18 +5,15 @@ var net = require('net');
 var server = net.createServer(function(socket) {
 
   // lookup host and port from service record
-  dns.resolveSrv('_mongodb-production._tcp.required.local', function (err, res) {
-
+  dns.resolveSrv(process.argv[2], function (err, res) {
+   
     // kill connection if we cant find answer
     if (err || !res.length) {
       socket.end();
       return;
     }
 
-    // debug
-    console.log(JSON.stringify(res));
-
-    var host = res[0].host;
+    var host = res[0].name;
     var port = res[0].port;
 
     // connect to remote side
