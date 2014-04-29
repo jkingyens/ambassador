@@ -1,0 +1,27 @@
+{
+  "name": "ambassador",
+  "version": "0.0.0",
+  "description": "ambassador for cross-host docker container linking via DNS SRV records",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jkingyens/ambassador.git"
+  },
+  "keywords": [
+    "docker",
+    "dns",
+    "discovery"
+  ],
+  "author": "jeff.kingyens@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jkingyens/ambassador/issues"
+  },
+  "homepage": "https://github.com/jkingyens/ambassador",
+  "dependencies": {
+    "native-dns": "^0.6.1"
+  }
+}
