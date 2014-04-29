@@ -8,7 +8,7 @@ example:
     
 apiserver will then container environment variables via link:
 
-DB_PORT_3000_ADDR
-DB_PORT_3000_PORT
+* DB_PORT_3000_TCP_ADDR
+* DB_PORT_3000_TCP_PORT
 
 apiserver container can then use this to connect to service that exists somewhere in the cluster.
