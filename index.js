@@ -22,7 +22,6 @@ var server = net.createServer(function(socket) {
     cache: false
   });
 
-
   req.on('timeout', function () {
     console.log('Timeout in making request');
   });
@@ -43,6 +42,9 @@ var server = net.createServer(function(socket) {
     var ttl = answer[0].ttl;
     var priority = answer[0].priority;
     var weight = answer[0].weight;
+
+    // log the match
+    console.log(process.argv[2] + ' => ' + answer[0].target + ':' + answer[0].port);
 
     // connect to remote side
     var client = net.connect({

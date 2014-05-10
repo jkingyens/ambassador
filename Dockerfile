@@ -1,7 +1,7 @@
 FROM ubuntu
 MAINTAINER jeff.kingyens@gmail.com
 RUN apt-get update
-RUN apt-get install -y python-software-properties python g++ make
+RUN apt-get install -y software-properties-common python-software-properties python g++ make
 RUN add-apt-repository -y ppa:chris-lea/node.js
 RUN echo "deb http://archive.ubuntu.com/ubuntu precise universe" >> /etc/apt/sources.list
 RUN apt-get update
