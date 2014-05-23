@@ -5,7 +5,12 @@ For example, assume you have a mongodb container running somewhere in your clust
     docker run -d -name dns-server jkingyens/helixdns
     docker run -d -link dns-server:dns -name db-amb jkingyens/ambassador _mongodb._tcp.domain.local
     docker run -d -link db-amb:db api-server
-    
+
+Alternatively, if you already have DNS deployed at a particular ip:port and dont want to hard link a DNS container:
+
+    docker run -d -dns <ip:port> -name db-amb jkingyens/ambassador _mongodb._tcp.domain.local
+    docker run -d -link db-amb:db api-server
+
 Now, `api-server` only needs to be concerned with the environment variables exposed via linking:
 
 * DB_PORT_3000_TCP_ADDR
