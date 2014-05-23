@@ -1,8 +1,8 @@
 {
-  "name": "ambassador",
-  "version": "0.0.0",
-  "description": "ambassador for cross-host docker container linking via DNS SRV records",
-  "main": "index.js",
+  "name": "amb-dns",
+  "version": "0.2.0",
+  "description": "ambassador for dynamically linking sockets across hosts using DNS SRV records",
+  "main": "ambassador.js",
   "scripts": {
     "test": "mocha"
   },
@@ -23,5 +23,9 @@
   "homepage": "https://github.com/jkingyens/ambassador",
   "dependencies": {
     "native-dns": "^0.6.1"
+  },
+  "devDependencies": {
+    "should": "^3.3.2",
+    "mocha": "^1.19.0"
   }
 }
