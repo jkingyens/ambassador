@@ -1,3 +1,4 @@
+var domain = require('domain');
 var dns = require('native-dns');
 var net = require('net');
 
@@ -39,63 +40,74 @@ module.exports = function (listenPort, serviceName, cb) {
     // listen for TCP connection
     return net.createServer(function(socket) {
 
-      // request service lookup
-      var question = dns.Question({
-        name: serviceName,
-        type: 'SRV',
+      // create domain and bind socket
+      var d = domain.create();
+      d.add(socket);
+      d.on('error', function (err) {
+        console.error(err.message);
       });
 
-      // make request to linked DNS server
-      var req = dns.Request({
-        question: question,
-        server: {
-          address: dns_addr,
-          port: dns_port,
-          type: dns_type
-        },
-        timeout: 1000,
-        cache: false
-      });
+      // run proxy call inside domain
+      d.run(function () {
 
-      req.on('timeout', function () {
-        console.log('Timeout in making request');
-      });
-
-      req.on('message', function (err, res) {
-
-        var answer = res.answer;
-
-        // kill connection if we cant find answer
-        if (err || !answer.length) {
-          console.log('Could not locate service: ' + serviceName);
-          socket.end();
-          return;
-        }
-
-        // ignore weights for now
-        var host = answer[0].target;
-        var port = answer[0].port;
-        var ttl = answer[0].ttl;
-        var priority = answer[0].priority;
-        var weight = answer[0].weight;
-
-        // log the match
-        console.log(serviceName + ' => ' + answer[0].target + ':' + answer[0].port);
-
-        // connect to remote side
-        var client = net.connect({
-          port: port,
-          host: host
-        }, function () {
-          socket.pipe(client);
-          client.pipe(socket);
+        // request service lookup
+        var question = dns.Question({
+          name: serviceName,
+          type: 'SRV',
         });
 
-      });
+        // make request to linked DNS server
+        var req = dns.Request({
+          question: question,
+          server: {
+            address: dns_addr,
+            port: dns_port,
+            type: dns_type
+          },
+          timeout: 1000,
+          cache: false
+        });
 
-      req.send();
+        req.on('timeout', function () {
+          console.log('Timeout in making request');
+        });
+
+        req.on('message', function (err, res) {
+
+          var answer = res.answer;
+
+          // kill connection if we cant find answer
+          if (err || !answer.length) {
+            console.log('Could not locate service: ' + serviceName);
+            socket.end();
+            return;
+          }
+
+          // ignore weights for now
+          var host = answer[0].target;
+          var port = answer[0].port;
+          var ttl = answer[0].ttl;
+          var priority = answer[0].priority;
+          var weight = answer[0].weight;
+
+          // log the match
+          console.log(serviceName + ' => ' + answer[0].target + ':' + answer[0].port);
+
+          // connect to remote side
+          var client = net.connect({
+            port: port,
+            host: host
+          }, function () {
+            socket.pipe(client);
+            client.pipe(socket);
+          });
+
+        });
+
+        req.send();
+
+      });
 
     });
   }
-
 }
